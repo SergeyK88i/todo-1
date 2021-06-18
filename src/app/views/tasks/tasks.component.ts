@@ -14,7 +14,7 @@ export class TasksComponent implements OnInit {
   constructor(private dataHandler: DataHandlerService) { }
 
   ngOnInit(): void {
-    this.tasks = this.dataHandler.getTask()
+    this.dataHandler.taskSubject.subscribe(tas =>this.tasks = tas);
   }
 
 }
