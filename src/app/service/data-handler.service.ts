@@ -2,26 +2,30 @@ import { Injectable } from '@angular/core';
 import {Category} from "../model/Category";
 import {TestData} from "../data/TestData";
 import {Task} from "../model/Task";
-import {BehaviorSubject, Subject} from "rxjs";
+import {BehaviorSubject, Observable, Subject} from "rxjs";
+import {CategoryDAOArray} from "../data/dao/impl/CategoryDAOArray";
+import {TaskDAOArray} from "../data/dao/impl/TaskDAOArray";
 
 @Injectable({
   providedIn: 'root'
 })
 export class DataHandlerService {
 
-  taskSubject = new BehaviorSubject<Task[]>(TestData.tasks);
-  categoriesSubject = new BehaviorSubject<Category[]>(TestData.categories);
+  // релизации работы с данными с помощью массива
+  // (можно подставлять любые релизации, в том числе с БД. Главное - соблюдать интерфейсы)
+  private taskDaoArray = new TaskDAOArray();
+  private categoryDaoArray = new CategoryDAOArray();
 
   constructor() {
-    this.filTask();
   }
 
+  getAllTasks(): Observable<Task[]> {
+    return this.taskDaoArray.getAll();
+  }
 
-  filTask(){
-    this.taskSubject.next(TestData.tasks);
+  getAllCategories(): Observable<Category[]> {
+    return this.categoryDaoArray.getAll();
   }
-  filTaskByCategory(categori: Category) {
-    const tasks = TestData.tasks.filter(task => task.category === categori);
-    this.taskSubject.next(tasks);
-  }
+
 }
+
